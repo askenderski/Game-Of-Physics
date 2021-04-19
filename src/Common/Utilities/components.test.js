@@ -14,3 +14,22 @@ const getType = variable => Array.isArray(variable) ? "array" : "string";
             expect(combineClassNames(classNameA, classNameB)).toBe(result);
         });
     });
+
+test("combineClassNames handles first parameter of undefined as empty string", () => {
+    const className = "className";
+
+    expect(combineClassNames(undefined, className)).toContain(className);
+});
+
+test("combineClassNames handles second parameter of undefined as empty string", () => {
+    const className = "className";
+
+    expect(combineClassNames(className, undefined)).toContain(className);
+});
+
+test("combineClassNames handles both parameters of undefined as empty strings", () => {
+    const combinedClassName = combineClassNames(undefined, undefined);
+    const nonSpaceSymbolsInCombinedClassName = combinedClassName.match(/[^ ]+/);
+
+    expect(nonSpaceSymbolsInCombinedClassName).toBeNull();
+});
