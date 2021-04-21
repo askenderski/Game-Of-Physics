@@ -2,7 +2,7 @@ import FieldInput from "./FieldInput";
 import {fireEvent, render} from "@testing-library/react";
 import {useState} from "react";
 import {shallow} from "enzyme";
-import style from "./FieldInput.module.css";
+import style from "./FieldInput.module.scss";
 
 const renderFieldInput = props => {
     function WrapperComponent({value, ...rest}) {

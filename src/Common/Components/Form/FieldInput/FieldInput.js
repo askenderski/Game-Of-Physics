@@ -1,4 +1,4 @@
-import style from "./FieldInput.module.css";
+import style from "./FieldInput.module.scss";
 
 function FieldInput({value, onChange, className=style.input, ...rest}) {
     return (
