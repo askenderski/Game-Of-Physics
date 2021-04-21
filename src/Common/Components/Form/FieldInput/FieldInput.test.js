@@ -2,6 +2,7 @@ import FieldInput from "./FieldInput";
 import {fireEvent, render} from "@testing-library/react";
 import {useState} from "react";
 import {shallow} from "enzyme";
+import style from "./FieldInput.module.css";
 
 const renderFieldInput = props => {
     function WrapperComponent({value, ...rest}) {
@@ -52,4 +53,26 @@ test("FieldInput passes unexpected props correctly to input", () => {
     const inputUnexpectedProp = getProp(inputElement, propName);
 
     expect(inputUnexpectedProp).toBe(propValue);
+});
+
+test("FieldInput passes className correctly to input", () => {
+    const className = "someClassName";
+
+    const wrapper = renderFieldInputWithPropGetter({className});
+
+    const inputElement = getInputElementByWrapperWithProps(wrapper);
+    const classNamePassedToInput = getProp(inputElement, "className");
+
+    expect(classNamePassedToInput).toBe(className);
+});
+
+test("FieldInput passes default className of style.input correctly to input", () => {
+    const expectedClassName = style.input;
+
+    const wrapper = renderFieldInputWithPropGetter({});
+
+    const inputElement = getInputElementByWrapperWithProps(wrapper);
+    const classNamePassedToInput = getProp(inputElement, "className");
+
+    expect(classNamePassedToInput).toBe(expectedClassName);
 });

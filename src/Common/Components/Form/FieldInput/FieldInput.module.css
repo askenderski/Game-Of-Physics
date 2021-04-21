@@ -1,0 +1,11 @@
+.input {
+    background: transparent;
+    /*margin-left: 1em;*/
+    border-top: hidden;
+    border-right: hidden;
+    border-left: hidden;
+    border-bottom: groove;
+    min-width: 250px;
+    border-bottom-width: thin;
+    border-bottom-color: black;
+}
