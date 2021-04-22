@@ -1,4 +1,4 @@
-.input {
+.field {
   background: transparent;
   /*margin-left: 1em;*/
   border-top: hidden;
@@ -10,4 +10,4 @@
   border-bottom-color: black;
 }
 
-/*# sourceMappingURL=FieldInput.module.css.map */
+/*# sourceMappingURL=Input.module.css.map */
