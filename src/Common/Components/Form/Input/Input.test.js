@@ -1,28 +1,31 @@
 import Input from "./Input";
-import {shallow} from "enzyme";
+import {mount} from "enzyme";
 import InvalidInputTypeError from "./InvalidInputTypeError";
 import style from "./Input.module.scss";
 import getComponentFromType from "./typeToComponentMapping";
+import FormContext from "../FormContext";
 
 const defaultInputType = "field";
 const defaultInputElementType = getComponentFromType(defaultInputType);
 
-const renderInputWithPropGetter = ({inputType=defaultInputType, ...rest} = {}) =>
-    renderInputWithPropGetterByInputType({inputType, ...rest});
-const renderInputWithPropGetterByInputType = props =>
-    shallow(<Input {...props}/>);
+const defaultContext = {props: {}};
+
+const renderInputWithPropGetter = ({inputType=defaultInputType, ...rest} = {}, context) =>
+    renderInputWithPropGetterByInputType({inputType, ...rest}, context);
+const renderInputWithPropGetterByInputType = (props, context=defaultContext) =>
+    mount(<FormContext.Provider value={context}><Input {...props}/></FormContext.Provider>);
 
 const getInputElementByWrapperWithProps = (wrapper, inputElementType=defaultInputElementType) => wrapper.find(inputElementType);
 const getProp = (element, prop) => element.prop(prop);
 
-describe("Input works correctly with FieldInput", () => {
-    test("Input returns FieldInput when inputType field is given", () => {
+describe("Input works correctly with specific type", () => {
+    test("Input renders corresponding element when inputType field is given", () => {
         const input = renderInputWithPropGetter();
 
         expect(getInputElementByWrapperWithProps(input)).toHaveLength(1);
     });
 
-    test("Input passes props to FieldInput correctly", () => {
+    test("Input passes props to specific type correctly", () => {
         const propsToPass = {
             a: "a",
             b: "b"
@@ -36,7 +39,30 @@ describe("Input works correctly with FieldInput", () => {
         });
     });
 
-    test("Input passes className correctly to input", () => {
+    test("Input works with no name passed", () => {
+        expect(renderInputWithPropGetter).not.toThrow();
+    });
+
+    test("Input passes form values to specific input type correctly", () => {
+        const name = "someName";
+        const formValuesToBePassed = {
+            props: {
+                [name]: {
+                    a: 1,
+                    b: 2
+                }
+            }
+        };
+
+        const input = renderInputWithPropGetter({name}, formValuesToBePassed);
+        const inputElement = getInputElementByWrapperWithProps(input);
+
+        Object.entries(formValuesToBePassed.props[name]).forEach(([propName, propValue]) => {
+            expect(getProp(inputElement, propName)).toBe(propValue);
+        });
+    });
+
+    test("Input passes className correctly to input of specific type", () => {
         const className = "someClassName";
 
         const wrapper = renderInputWithPropGetter({className});
@@ -47,7 +73,7 @@ describe("Input works correctly with FieldInput", () => {
         expect(classNamePassedToInput).toBe(className);
     });
 
-    test("Input passes default className correctly to input", () => {
+    test("Input passes default className correctly to input of specific type", () => {
         const wrapper = renderInputWithPropGetter();
 
         const inputElement = getInputElementByWrapperWithProps(wrapper);
