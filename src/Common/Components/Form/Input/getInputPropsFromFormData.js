@@ -1,0 +1,1 @@
+export default function getInputPropsFromFormData(formData, name, inputType) {};
