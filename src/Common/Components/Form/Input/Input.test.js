@@ -23,7 +23,7 @@ const renderInputWithPropGetterByInputType = (props, context=defaultContext) =>
 const getInputElementByWrapperWithProps = (wrapper, inputElementType=defaultInputElementType) => wrapper.find(inputElementType);
 const getProp = (element, prop) => element.prop(prop);
 
-function extracted({propsToPassManually, formProps}) {
+function createFormWithInputComponent({propsToPassManually, formProps}) {
     const name = "someName";
     const formValuesToBePassed = {};
     const inputType = inputTypeDifferentFromDefault;
@@ -75,7 +75,7 @@ describe("Input works correctly with specific type", () => {
             a: "a",
             b: "b"
         };
-        const {getProp} = extracted({formProps});
+        const {getProp} = createFormWithInputComponent({formProps});
 
         Object.entries(formProps).forEach(([propName, propValue]) => {
             expect(getProp(propName)).toBe(propValue);
@@ -87,7 +87,7 @@ describe("Input works correctly with specific type", () => {
         const formProps = {a: originalA, b: originalB};
         const propsToPassManually = {a: overWrittenA};
 
-        const {getProp} = extracted({propsToPassManually, formProps});
+        const {getProp} = createFormWithInputComponent({propsToPassManually, formProps});
 
         expect(getProp("a")).toBe(overWrittenA);
     });
