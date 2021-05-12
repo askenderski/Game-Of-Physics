@@ -23,7 +23,7 @@ const renderInputWithPropGetterByInputType = (props, context=defaultContext) =>
 const getInputElementByWrapperWithProps = (wrapper, inputElementType=defaultInputElementType) => wrapper.find(inputElementType);
 const getProp = (element, prop) => element.prop(prop);
 
-function createFormWithInputComponent({propsToPassManually, formProps}) {
+function createFormWithInputComponentUnit({propsToPassManually, formProps}) {
     const name = "someName";
     const formValuesToBePassed = {};
     const inputType = inputTypeDifferentFromDefault;
@@ -36,93 +36,99 @@ function createFormWithInputComponent({propsToPassManually, formProps}) {
         return {};
     });
 
+    return createFormWithInputComponentIntegration({propsToPassManually,
+        formProps: formValuesToBePassed});
+}
+
+function createFormWithInputComponentIntegration({propsToPassManually, formProps}) {
+    const name = "someName";
+    const inputType = inputTypeDifferentFromDefault;
+
     const input = renderInputWithPropGetter(
         {name, inputType: inputTypeDifferentFromDefault, ...propsToPassManually},
-        formValuesToBePassed
+        formProps
     );
-    const inputElement = getInputElementByWrapperWithProps(input, inputTypeDifferentFromDefault);
+    const inputElement = getInputElementByWrapperWithProps(input, inputType);
 
     return {getProp: propName => getProp(inputElement, propName)};
 }
 
-describe("Input works correctly with specific type", () => {
-    test("Input renders corresponding element when inputType field is given", () => {
-        const input = renderInputWithPropGetter();
+const executeTests = ({createFormWithInputComponent}) => {
+    describe("Input works correctly with specific type", () => {
+        test("Input renders corresponding element when inputType field is given", () => {
+            const input = renderInputWithPropGetter();
 
-        expect(getInputElementByWrapperWithProps(input)).toHaveLength(1);
-    });
+            expect(getInputElementByWrapperWithProps(input)).toHaveLength(1);
+        });
 
-    test("Input passes props to specific type correctly", () => {
-        const propsToPass = {
-            a: "a",
-            b: "b"
-        };
+        test("Input passes props to specific type correctly", () => {
+            const propsToPass = {
+                a: "a",
+                b: "b"
+            };
 
-        const input = renderInputWithPropGetter(propsToPass);
-        const inputElement = getInputElementByWrapperWithProps(input);
+            const input = renderInputWithPropGetter(propsToPass);
+            const inputElement = getInputElementByWrapperWithProps(input);
 
-        Object.entries(propsToPass).forEach(([propName, propValue]) => {
-            expect(getProp(inputElement, propName)).toBe(propValue);
+            Object.entries(propsToPass).forEach(([propName, propValue]) => {
+                expect(getProp(inputElement, propName)).toBe(propValue);
+            });
+        });
+
+        test("Input works with no name passed", () => {
+            expect(renderInputWithPropGetter).not.toThrow();
+        });
+
+        test("Direct input props overwrite props gotten from form context", () => {
+            const [formA, manuallyPassedA] = ["form a", "manual a"];
+            const formProps = {values: {a: formA}};
+            const propsToPassManually = {a: manuallyPassedA};
+
+            const {getProp} = createFormWithInputComponent({propsToPassManually, formProps});
+
+            expect(getProp("a")).toBe(manuallyPassedA);
+        });
+
+        test("Input passes className correctly to input of specific type", () => {
+            const className = "someClassName";
+
+            const wrapper = renderInputWithPropGetter({className});
+
+            const inputElement = getInputElementByWrapperWithProps(wrapper);
+            const classNamePassedToInput = getProp(inputElement, "className");
+
+            expect(classNamePassedToInput).toBe(className);
+        });
+
+        test("Input passes default className correctly to input of specific type", () => {
+            const wrapper = renderInputWithPropGetter();
+
+            const inputElement = getInputElementByWrapperWithProps(wrapper);
+            const classNamePassedToInput = getProp(inputElement, "className");
+
+            expect(classNamePassedToInput).toBe(style.field);
         });
     });
 
-    test("Input works with no name passed", () => {
-        expect(renderInputWithPropGetter).not.toThrow();
-    });
+    describe("Input works correctly with invalid inputType-s", () => {
+        test("Input throws correct error when invalid inputType is given", () => {
+            const renderInput = () => renderInputWithPropGetter({inputType: "invalidInputType"});
 
-    test("Input passes form values to specific input type correctly", () => {
-        const formProps = {
-            a: "a",
-            b: "b"
-        };
-        const {getProp} = createFormWithInputComponent({formProps});
+            expect(renderInput).toThrow(InvalidInputTypeError);
+        });
 
-        Object.entries(formProps).forEach(([propName, propValue]) => {
-            expect(getProp(propName)).toBe(propValue);
+        test("Input throws correct error when no inputType is given", () => {
+            const renderInput = () => renderInputWithPropGetterByInputType({inputType: undefined});
+
+            expect(renderInput).toThrow(InvalidInputTypeError);
         });
     });
+};
 
-    test("Direct input props overwrite props gotten from form context", () => {
-        const [originalA, originalB, overWrittenA] = ["a", "b", "new a"];
-        const formProps = {a: originalA, b: originalB};
-        const propsToPassManually = {a: overWrittenA};
-
-        const {getProp} = createFormWithInputComponent({propsToPassManually, formProps});
-
-        expect(getProp("a")).toBe(overWrittenA);
-    });
-
-    test("Input passes className correctly to input of specific type", () => {
-        const className = "someClassName";
-
-        const wrapper = renderInputWithPropGetter({className});
-
-        const inputElement = getInputElementByWrapperWithProps(wrapper);
-        const classNamePassedToInput = getProp(inputElement, "className");
-
-        expect(classNamePassedToInput).toBe(className);
-    });
-
-    test("Input passes default className correctly to input of specific type", () => {
-        const wrapper = renderInputWithPropGetter();
-
-        const inputElement = getInputElementByWrapperWithProps(wrapper);
-        const classNamePassedToInput = getProp(inputElement, "className");
-
-        expect(classNamePassedToInput).toBe(style.field);
-    });
+describe("unit tests", () => {
+    executeTests({createFormWithInputComponent: createFormWithInputComponentUnit});
 });
 
-describe("Input works correctly with invalid inputType-s", () => {
-    test("Input throws correct error when invalid inputType is given", () => {
-        const renderInput = () => renderInputWithPropGetter({ inputType: "invalidInputType" });
-
-        expect(renderInput).toThrow(InvalidInputTypeError);
-    });
-
-    test("Input throws correct error when no inputType is given", () => {
-        const renderInput = () => renderInputWithPropGetterByInputType({ inputType: undefined });
-
-        expect(renderInput).toThrow(InvalidInputTypeError);
-    });
+describe("integration tests", () => {
+    executeTests({createFormWithInputComponent: createFormWithInputComponentIntegration});
 });
