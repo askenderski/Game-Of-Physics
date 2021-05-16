@@ -4,9 +4,9 @@ import InvalidInputTypeError from "./InvalidInputTypeError";
 import style from "./Input.module.scss";
 import getComponentFromType from "./typeToComponentMapping";
 import FormContext from "../../FormContext";
-import getInputPropsFromFormData from "./getInputPropsFromFormData";
+import getInputPropsFromFormData from "./getInputPropsFromFormData/getInputPropsFromFormData";
 
-jest.mock("./getInputPropsFromFormData", () => jest.fn());
+jest.mock("./getInputPropsFromFormData/getInputPropsFromFormData", () => jest.fn());
 
 const defaultInputType = "field";
 const defaultInputElementType = getComponentFromType(defaultInputType);
