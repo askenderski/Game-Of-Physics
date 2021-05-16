@@ -1,5 +1,5 @@
 import getComponentFromType from "./typeToComponentMapping";
-import style from "./Input.module.scss";
+import style from "../Input.module.scss";
 import FormContext from "../../FormContext";
 import {useContext} from "react";
 import getInputPropsFromFormData from "./getInputPropsFromFormData/getInputPropsFromFormData";
