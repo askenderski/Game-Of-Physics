@@ -1,8 +1,8 @@
 import InputTestsDataAndUtilities from "./InputTestsDataAndUtilities";
-import getInputPropsFromFormData from "./getInputPropsFromFormData/getInputPropsFromFormData";
+import getInputPropsFromFormData from "../getInputPropsFromFormData/getInputPropsFromFormData";
 import executeTests from "./InputTests";
 
-jest.mock("./getInputPropsFromFormData/getInputPropsFromFormData", () => jest.fn());
+jest.mock("../getInputPropsFromFormData/getInputPropsFromFormData", () => jest.fn());
 
 function createFormWithInputComponentUnit({propsToPassManually, formProps}) {
     const name = "someName";

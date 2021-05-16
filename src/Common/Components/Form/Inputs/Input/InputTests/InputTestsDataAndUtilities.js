@@ -1,6 +1,6 @@
-import getComponentFromType from "./typeToComponentMapping";
+import getComponentFromType from "../typeToComponentMapping";
 import {mount} from "enzyme";
-import FormContext from "../../FormContext";
+import FormContext from "../../../FormContext";
 import Input from "./Input";
 
 const defaultInputType = "field";

@@ -1,5 +1,5 @@
-import InvalidInputTypeError from "./InvalidInputTypeError";
-import style from "../Input.module.scss";
+import InvalidInputTypeError from "../InvalidInputTypeError";
+import style from "../../Input.module.scss";
 import InputTestsDataAndUtilities from "./InputTestsDataAndUtilities";
 
 export default function executeTests({createFormWithInputComponent}) {
