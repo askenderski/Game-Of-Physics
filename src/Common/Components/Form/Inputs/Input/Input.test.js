@@ -3,7 +3,7 @@ import {mount} from "enzyme";
 import InvalidInputTypeError from "./InvalidInputTypeError";
 import style from "./Input.module.scss";
 import getComponentFromType from "./typeToComponentMapping";
-import FormContext from "../FormContext";
+import FormContext from "../../FormContext";
 import getInputPropsFromFormData from "./getInputPropsFromFormData";
 
 jest.mock("./getInputPropsFromFormData", () => jest.fn());
