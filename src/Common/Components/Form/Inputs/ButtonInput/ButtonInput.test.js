@@ -19,8 +19,7 @@ const getButtonElementByButtonInput = buttonInput => buttonInput.getByLabelText(
 
 //mount is used since shallow doesn't work with ComponentType gotten dynamically
 const renderButtonInputWithPropGetter = ({type=defaultButtonType, ...rest}) =>
-    renderButtonInputWithPropGetterByType({type, ...rest});
-const renderButtonInputWithPropGetterByType = props => mount(<ButtonInput {...props}/>);
+    mount(<ButtonInput type={type} {...rest}/>);
 const getButtonElementByWrapperWithProps = (wrapper, buttonType = defaultButtonType) => wrapper.find(buttonType);
 const getProp = (element, prop) => element.prop(prop);
 
@@ -64,7 +63,7 @@ test("ButtonInput renders input element with type if such is passed", () => {
     const type = "submit";
     const componentType = "input";
 
-    const buttonInput = renderButtonInputWithPropGetterByType({type});
+    const buttonInput = renderButtonInputWithPropGetter({type});
     const buttonElement = getButtonElementByWrapperWithProps(buttonInput, componentType);
 
     expect(buttonElement).toHaveLength(1);
@@ -74,17 +73,8 @@ test("ButtonInput passes correct type to input element when type is passed", () 
     const type = "submit";
     const componentType = "input";
 
-    const buttonInput = renderButtonInputWithPropGetterByType({type});
+    const buttonInput = renderButtonInputWithPropGetter({type});
     const buttonElement = getButtonElementByWrapperWithProps(buttonInput, componentType);
 
     expect(getProp(buttonElement, "type")).toBe(type);
-});
-
-test("FieldInput passes unexpected props correctly to input", () => {
-    const componentType = "button";
-
-    const buttonInput = renderButtonInputWithPropGetterByType({type: undefined});
-    const buttonElement = getButtonElementByWrapperWithProps(buttonInput, componentType);
-
-    expect(buttonElement).toHaveLength(1);
 });
