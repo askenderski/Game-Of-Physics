@@ -2,12 +2,14 @@ import InvalidInputTypeError from "../InvalidInputTypeError";
 import style from "../../Input.module.scss";
 import InputTestsDataAndUtilities from "./InputTestsDataAndUtilities";
 
-export default function executeTests({createFormWithInputComponent}) {
+export default function executeTests(
+    {createFormWithInputComponent, renderInputComponentWithPropGetter, renderInputComponentWithPropGetterWithoutDefaults}
+    ) {
     describe("Input works correctly with specific type", () => {
         test("Input renders corresponding element when inputType field is given", () => {
-            const input = InputTestsDataAndUtilities.renderInputWithPropGetter();
+            const {getInnerInputElement} = renderInputComponentWithPropGetter();
 
-            expect(InputTestsDataAndUtilities.getInputElementByWrapperWithProps(input)).toHaveLength(1);
+            expect(getInnerInputElement()).toHaveLength(1);
         });
 
         test("Input passes props to specific type correctly", () => {
@@ -16,8 +18,8 @@ export default function executeTests({createFormWithInputComponent}) {
                 b: "b"
             };
 
-            const input = InputTestsDataAndUtilities.renderInputWithPropGetter(propsToPass);
-            const inputElement = InputTestsDataAndUtilities.getInputElementByWrapperWithProps(input);
+            const {getInnerInputElement} = renderInputComponentWithPropGetter(propsToPass);
+            const inputElement = getInnerInputElement();
 
             Object.entries(propsToPass).forEach(([propName, propValue]) => {
                 expect(InputTestsDataAndUtilities.getProp(inputElement, propName)).toBe(propValue);
@@ -25,7 +27,9 @@ export default function executeTests({createFormWithInputComponent}) {
         });
 
         test("Input works with no name passed", () => {
-            expect(InputTestsDataAndUtilities.renderInputWithPropGetter).not.toThrow();
+            expect(renderInputComponentWithPropGetterWithoutDefaults.bind(
+                renderInputComponentWithPropGetterWithoutDefaults, {inputType: InputTestsDataAndUtilities.defaultInputType}
+            )).not.toThrow();
         });
 
         test("Direct input props overwrite props gotten from form context", () => {
@@ -41,18 +45,18 @@ export default function executeTests({createFormWithInputComponent}) {
         test("Input passes className correctly to input of specific type", () => {
             const className = "someClassName";
 
-            const wrapper = InputTestsDataAndUtilities.renderInputWithPropGetter({className});
+            const {getInnerInputElement} = renderInputComponentWithPropGetter({className});
 
-            const inputElement = InputTestsDataAndUtilities.getInputElementByWrapperWithProps(wrapper);
+            const inputElement = getInnerInputElement();
             const classNamePassedToInput = InputTestsDataAndUtilities.getProp(inputElement, "className");
 
             expect(classNamePassedToInput).toBe(className);
         });
 
         test("Input passes default className correctly to input of specific type", () => {
-            const wrapper = InputTestsDataAndUtilities.renderInputWithPropGetter();
+            const {getInnerInputElement} = renderInputComponentWithPropGetter();
 
-            const inputElement = InputTestsDataAndUtilities.getInputElementByWrapperWithProps(wrapper);
+            const inputElement = getInnerInputElement();
             const classNamePassedToInput = InputTestsDataAndUtilities.getProp(inputElement, "className");
 
             expect(classNamePassedToInput).toBe(style.field);
@@ -61,13 +65,13 @@ export default function executeTests({createFormWithInputComponent}) {
 
     describe("Input works correctly with invalid inputType-s", () => {
         test("Input throws correct error when invalid inputType is given", () => {
-            const renderInput = () => InputTestsDataAndUtilities.renderInputWithPropGetter({inputType: "invalidInputType"});
+            const renderInput = () => renderInputComponentWithPropGetter({inputType: "invalidInputType"});
 
             expect(renderInput).toThrow(InvalidInputTypeError);
         });
 
         test("Input throws correct error when no inputType is given", () => {
-            const renderInput = () => InputTestsDataAndUtilities.renderInputWithPropGetterByInputType({inputType: undefined});
+            const renderInput = () => renderInputComponentWithPropGetterWithoutDefaults({inputType: undefined});
 
             expect(renderInput).toThrow(InvalidInputTypeError);
         });

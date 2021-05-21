@@ -66,7 +66,19 @@ describe('unit tests', () => {
         });
     });
 
-    executeTests({createFormWithInputComponent: createFormWithInputComponentUnit});
+    executeTests({
+        createFormWithInputComponent: createFormWithInputComponentUnit,
+        renderInputComponentWithPropGetter: (...args) => {
+            const InputWithPropGetter = InputTestsDataAndUtilities.renderInputWithPropGetter(...args);
+
+            return {getInnerInputElement: ()=>InputTestsDataAndUtilities.getInputElementByWrapperWithProps(InputWithPropGetter)};
+        },
+        renderInputComponentWithPropGetterWithoutDefaults: (...args) => {
+            const InputWithPropGetter = InputTestsDataAndUtilities.renderInputWithPropGetterWithoutDefaults(...args);
+
+            return {getInnerInputElement: ()=>InputTestsDataAndUtilities.getInputElementByWrapperWithProps(InputWithPropGetter)};
+        }
+    });
 });
 
 //This tests the integration of the Input component with the getInputPropsFromFormData function
@@ -79,7 +91,19 @@ describe('integration tests', () => {
     });
 
     describe("integration with all", () => {
-        executeTests({createFormWithInputComponent: createFormWithInputComponentIntegration});
+        executeTests({
+            createFormWithInputComponent: createFormWithInputComponentIntegration,
+            renderInputComponentWithPropGetter: (...args) => {
+                const InputWithPropGetter = InputTestsDataAndUtilities.renderInputWithPropGetter(...args);
+
+                return {getInnerInputElement: ()=>InputTestsDataAndUtilities.getInputElementByWrapperWithProps(InputWithPropGetter)};
+            },
+            renderInputComponentWithPropGetterWithoutDefaults: (...args) => {
+                const InputWithPropGetter = InputTestsDataAndUtilities.renderInputWithPropGetterWithoutDefaults(...args);
+
+                return {getInnerInputElement: ()=>InputTestsDataAndUtilities.getInputElementByWrapperWithProps(InputWithPropGetter)};
+            }
+        });
     });
 
     describe("integration with getInputPropsFromFormData", () => {

@@ -12,20 +12,20 @@ const inputElementTypeDifferentFromDefault = getComponentFromType(inputTypeDiffe
 const getDefaultContext = props => ({values: {[props.name]: ""}});
 
 const renderInputWithPropGetter = ({inputType=defaultInputType, ...rest} = {}, context) =>
-    renderInputWithPropGetterByInputType({inputType, ...rest}, context);
-const renderInputWithPropGetterByInputType = (props, context=getDefaultContext(props)) =>
+    renderInputWithPropGetterWithoutDefaults({inputType, ...rest}, context);
+const renderInputWithPropGetterWithoutDefaults = (props, context=getDefaultContext(props)) =>
     mount(<FormContext.Provider value={context}><Input {...props}/></FormContext.Provider>);
 
 const getInputElementByWrapperWithProps = (wrapper, inputElementType=defaultInputElementType) => wrapper.find(inputElementType);
 const getProp = (element, prop) => element.prop(prop);
 
 const dataAndUtilities = {
+    defaultInputType,
     defaultInputElementType,
     inputTypeDifferentFromDefault,
     inputElementTypeDifferentFromDefault,
-    getDefaultContext,
     renderInputWithPropGetter,
-    renderInputWithPropGetterByInputType,
+    renderInputWithPropGetterWithoutDefaults,
     getInputElementByWrapperWithProps,
     getProp
 };
