@@ -1,10 +1,88 @@
-import {executeIntegrationTests, executeUnitTests} from "./InputModuleTests";
+import InputTestsDataAndUtilities from "./InputTestsDataAndUtilities";
+import getInputPropsFromFormData from "../getInputPropsFromFormData/getInputPropsFromFormData";
+import getComponentFromType from "../typeToComponentMapping";
+import executeTests from "./InputTests";
+import executeGetInputPropsFromFormDataModuleTests
+    from "../getInputPropsFromFormData/getInputPropsFromFormDataModuleTests";
 
-describe("unit tests", () => {
-    executeUnitTests();
+jest.mock("../getInputPropsFromFormData/getInputPropsFromFormData", () => {
+    return {
+        __esModule: true,
+        default: jest.fn(function (...props) {
+            return jest.requireActual("../getInputPropsFromFormData/getInputPropsFromFormData")
+                .default.call(this, ...props);
+        })
+    };
+});
+
+function getPropExtractorByFormData(formData, name, inputType) {
+    const {getProp} =
+        createFormWithInputComponentIntegration({
+            propsToPassManually: {name, inputType}, formProps: formData
+        });
+
+    return {
+        get(propName) {
+            return getProp(propName);
+        }
+    };
+}
+
+function createFormWithInputComponentUnit({propsToPassManually, formProps}) {
+    const name = propsToPassManually.name || "someName";
+    const formValuesToBePassed = {};
+    const inputType = propsToPassManually.inputType || InputTestsDataAndUtilities.inputTypeDifferentFromDefault;
+
+    getInputPropsFromFormData.mockImplementationOnce((formData, curName, curInputType) => {
+        if (formData === formValuesToBePassed && name === curName && curInputType === inputType) {
+            return formProps;
+        }
+
+        return {};
+    });
+
+    return createFormWithInputComponentIntegration({propsToPassManually,
+        formProps: formValuesToBePassed});
+}
+
+function createFormWithInputComponentIntegration({propsToPassManually, formProps}) {
+    const name = propsToPassManually.name || "someName";
+    const inputType = propsToPassManually.inputType || InputTestsDataAndUtilities.inputTypeDifferentFromDefault;
+    const inputElementType = getComponentFromType(inputType);
+
+    const input = InputTestsDataAndUtilities.renderInputWithPropGetter(
+        {name, inputType, ...propsToPassManually},
+        formProps
+    );
+    const inputElement = InputTestsDataAndUtilities.getInputElementByWrapperWithProps(input, inputElementType);
+
+    return {getProp: propName => InputTestsDataAndUtilities.getProp(inputElement, propName)};
+}
+
+describe('unit tests', () => {
+    beforeEach(() => {
+        getInputPropsFromFormData.mockImplementation(function () {
+            return undefined;
+        });
+    });
+
+    executeTests({createFormWithInputComponent: createFormWithInputComponentUnit});
 });
 
 //This tests the integration of the Input component with the getInputPropsFromFormData function
-describe("integration tests", () => {
-    executeIntegrationTests();
+describe('integration tests', () => {
+    beforeEach(() => {
+        getInputPropsFromFormData.mockImplementation(function (...props) {
+            return jest.requireActual("../getInputPropsFromFormData/getInputPropsFromFormData")
+                .default.call(this, ...props);
+        });
+    });
+
+    describe("integration with all", () => {
+        executeTests({createFormWithInputComponent: createFormWithInputComponentIntegration});
+    });
+
+    describe("integration with getInputPropsFromFormData", () => {
+        executeGetInputPropsFromFormDataModuleTests({getPropExtractorByFormData});
+    });
 });

@@ -31,7 +31,7 @@ export default function executeTests({createFormWithInputComponent}) {
         test("Direct input props overwrite props gotten from form context", () => {
             const [formA, manuallyPassedA] = ["form a", "manual a"];
             const formProps = {values: {a: formA}};
-            const propsToPassManually = {a: manuallyPassedA};
+            const propsToPassManually = {a: manuallyPassedA, name: "a"};
 
             const {getProp} = createFormWithInputComponent({propsToPassManually, formProps});
 
