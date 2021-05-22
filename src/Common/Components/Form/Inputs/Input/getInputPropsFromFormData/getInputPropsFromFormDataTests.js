@@ -19,7 +19,7 @@ function runTests({getPropExtractorByFormData}) {
             }
         }, inputName, defaultInputType);
 
-        expect(propExtractor.get("value")).toBe(value);
+        expect(propExtractor.getValue()).toBe(value);
     });
 
     describe("field input", () => {
@@ -39,7 +39,7 @@ function runTests({getPropExtractorByFormData}) {
                 }
             }, fieldName, inputType);
 
-            propExtractor.get("onChange")({target: {value: newValue}});
+            propExtractor.changeValue(newValue);
 
             expect(curValue).toBe(newValue);
         });

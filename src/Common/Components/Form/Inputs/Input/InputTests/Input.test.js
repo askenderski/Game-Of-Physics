@@ -22,8 +22,11 @@ function getPropExtractorByFormData(formData, name, inputType) {
         });
 
     return {
-        get(propName) {
-            return getProp(propName);
+        getValue() {
+            return getProp("value");
+        },
+        changeValue(value) {
+            getProp("onChange")({target: {value}});
         }
     };
 }
