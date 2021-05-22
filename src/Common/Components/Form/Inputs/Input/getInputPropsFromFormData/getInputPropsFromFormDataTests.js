@@ -19,7 +19,7 @@ function runTests({getPropExtractorByFormData}) {
             }
         }, inputName, defaultInputType);
 
-        expect(propExtractor.getValue()).toBe(value);
+        expect(propExtractor.isValueSameAs(value)).toBe(true);
     });
 
     describe("field input", () => {

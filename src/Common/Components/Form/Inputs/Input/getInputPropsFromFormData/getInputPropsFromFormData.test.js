@@ -7,8 +7,8 @@ function getPropExtractorByFormData(formData, name, inputType) {
     const getProp = propName => inputProps[propName];
 
     return {
-        getValue() {
-            return getProp("value");
+        isValueSameAs(value) {
+            return getProp("value") === value;
         },
         changeValue(value) {
             getProp("onChange")({target: {value}});

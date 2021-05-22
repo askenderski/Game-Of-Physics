@@ -2,6 +2,7 @@ import getComponentFromType from "../typeToComponentMapping";
 import {mount} from "enzyme";
 import FormContext from "../../../FormContext";
 import Input from "./Input";
+import {render} from "@testing-library/react";
 
 const defaultInputType = "field";
 const defaultInputElementType = getComponentFromType(defaultInputType);
@@ -16,6 +17,11 @@ const renderInputWithPropGetter = ({inputType=defaultInputType, ...rest} = {}, c
 const renderInputWithPropGetterWithoutDefaults = (props, context=getDefaultContext(props)) =>
     mount(<FormContext.Provider value={context}><Input {...props}/></FormContext.Provider>);
 
+const renderInput = ({inputType=defaultInputType, ...rest} = {}, context) =>
+    renderInputWithoutDefaults({inputType, ...rest}, context);
+const renderInputWithoutDefaults = (props, context=getDefaultContext(props)) =>
+    render(<FormContext.Provider value={context}><Input {...props}/></FormContext.Provider>);
+
 const getInputElementByWrapperWithProps = (wrapper, inputElementType=defaultInputElementType) => wrapper.find(inputElementType);
 const getProp = (element, prop) => element.prop(prop);
 
@@ -26,6 +32,8 @@ const dataAndUtilities = {
     inputElementTypeDifferentFromDefault,
     renderInputWithPropGetter,
     renderInputWithPropGetterWithoutDefaults,
+    renderInput,
+    renderInputWithoutDefaults,
     getInputElementByWrapperWithProps,
     getProp
 };
