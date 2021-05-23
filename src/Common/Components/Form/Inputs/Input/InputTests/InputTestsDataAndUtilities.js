@@ -4,10 +4,8 @@ import Input from "./Input";
 import {render} from "@testing-library/react";
 
 const defaultInputType = "input";
-const defaultInputElementType = defaultInputType;
 
 const inputTypeDifferentFromDefault = "button";
-const inputElementTypeDifferentFromDefault = inputTypeDifferentFromDefault;
 
 const getDefaultContext = props => ({values: {[props.name]: ""}});
 
@@ -21,14 +19,12 @@ const renderInput = ({inputType=defaultInputType, ...rest} = {}, context) =>
 const renderInputWithoutDefaults = (props, context=getDefaultContext(props)) =>
     render(<FormContext.Provider value={context}><Input {...props}/></FormContext.Provider>);
 
-const getInputElementByWrapperWithProps = (wrapper, inputElementType=defaultInputElementType) => wrapper.find(inputElementType);
+const getInputElementByWrapperWithProps = (wrapper, inputType=defaultInputType) => wrapper.find(inputType);
 const getProp = (element, prop) => element.prop(prop);
 
 const dataAndUtilities = {
     defaultInputType,
-    defaultInputElementType,
     inputTypeDifferentFromDefault,
-    inputElementTypeDifferentFromDefault,
     renderInputWithPropGetter,
     renderInputWithPropGetterWithoutDefaults,
     renderInput,
