@@ -1,6 +1,4 @@
-import Form from "./Form";
-import {mount} from "enzyme";
-import {act, cleanup, render} from "@testing-library/react";
+import {act, cleanup} from "@testing-library/react";
 import * as sleepModule from "../../Utilities/sleep";
 import Promise from "../../DataTypes/Promise";
 

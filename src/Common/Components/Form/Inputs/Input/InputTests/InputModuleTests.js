@@ -1,6 +1,6 @@
 import executeTests from "./InputTests";
-import executeGetInputPropsFromFormDataModuleTests from
-        "../getInputPropsFromFormData/getInputPropsFromFormDataModuleTests";
+import executeGetInputPropsFromFormDataModuleTests
+    from "../getInputPropsFromFormData/getInputPropsFromFormDataModuleTests";
 
 const executeModuleTests = () => {
     describe('Input tests', () => {
