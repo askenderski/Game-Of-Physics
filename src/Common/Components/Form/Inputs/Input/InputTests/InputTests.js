@@ -1,4 +1,3 @@
-import InvalidInputTypeError from "../InvalidInputTypeError";
 import style from "../../Input.module.scss";
 import InputTestsDataAndUtilities from "./InputTestsDataAndUtilities";
 
