@@ -4,7 +4,7 @@ import FormContext from "../../../FormContext";
 import Input from "./Input";
 import {render} from "@testing-library/react";
 
-const defaultInputType = "field";
+const defaultInputType = "input";
 const defaultInputElementType = getComponentFromType(defaultInputType);
 
 const inputTypeDifferentFromDefault = "button";

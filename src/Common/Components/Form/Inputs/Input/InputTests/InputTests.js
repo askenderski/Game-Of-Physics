@@ -58,7 +58,7 @@ export default function executeTests(
             const inputElement = getInnerInputElement();
             const classNamePassedToInput = InputTestsDataAndUtilities.getProp(inputElement, "className");
 
-            expect(classNamePassedToInput).toBe(style.field);
+            expect(classNamePassedToInput).toBe(style.input);
         });
     });
 };

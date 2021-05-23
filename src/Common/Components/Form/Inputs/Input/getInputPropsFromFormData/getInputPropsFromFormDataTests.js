@@ -5,7 +5,7 @@ function runTests({getPropExtractorByFormData}) {
         values: {}
     };
 
-    const defaultInputType = "field";
+    const defaultInputType = "input";
 
     test("field input extracts correct value", () => {
         const inputName = "a";
@@ -24,7 +24,7 @@ function runTests({getPropExtractorByFormData}) {
 
     describe("field input", () => {
         const defaultPropsForFieldTests = {...defaultPropsForAllTests};
-        const inputType = "field";
+        const inputType = "input";
 
         test("field input works correctly with changing value", () => {
             let curValue;

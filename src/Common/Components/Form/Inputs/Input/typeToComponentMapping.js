@@ -2,7 +2,7 @@
 import ButtonInput from "../ButtonInput/ButtonInput";
 
 const typeToComponentMap = {
-    field: "input",
+    input: "input",
     button: ButtonInput
 };
 
