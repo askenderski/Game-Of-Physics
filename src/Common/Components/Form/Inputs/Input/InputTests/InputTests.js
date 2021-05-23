@@ -62,18 +62,4 @@ export default function executeTests(
             expect(classNamePassedToInput).toBe(style.field);
         });
     });
-
-    describe("Input works correctly with invalid inputType-s", () => {
-        test("Input throws correct error when invalid inputType is given", () => {
-            const renderInput = () => renderInputComponentWithPropGetter({inputType: "invalidInputType"});
-
-            expect(renderInput).toThrow(InvalidInputTypeError);
-        });
-
-        test("Input throws correct error when no inputType is given", () => {
-            const renderInput = () => renderInputComponentWithPropGetterWithoutDefaults({inputType: undefined});
-
-            expect(renderInput).toThrow(InvalidInputTypeError);
-        });
-    });
 };
