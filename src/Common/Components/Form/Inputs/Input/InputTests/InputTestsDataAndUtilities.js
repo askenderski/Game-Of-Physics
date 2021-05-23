@@ -1,6 +1,6 @@
 import {mount} from "enzyme";
 import FormContext from "../../../FormContext";
-import Input from "./Input";
+import withInput from "./withInput";
 import {render} from "@testing-library/react";
 
 const defaultInputType = "input";
@@ -11,15 +11,19 @@ const renderInputWithPropGetter = (props = {}, context) => {
     const {inputType = defaultInputType, ...rest} = props;
     const contextToPass = {...getDefaultContext({inputType, ...rest}), ...context};
 
-    return mount(<FormContext.Provider value={contextToPass}><Input inputType={inputType} {...rest}/></FormContext.Provider>);
+    const Component = withInput(inputType);
+
+    return mount(<FormContext.Provider value={contextToPass}><Component {...rest}/></FormContext.Provider>);
 };
 
 const renderInput = (props = {}, context) => {
     const {inputType = defaultInputType, ...rest} = props;
     const contextToPass = {...getDefaultContext({inputType, ...rest}), ...context};
 
+    const Component = withInput(inputType);
+
     return render(<FormContext.Provider
-        value={contextToPass}><Input inputType={inputType} {...rest}/></FormContext.Provider>);
+        value={contextToPass}><Component inputType={inputType} {...rest}/></FormContext.Provider>);
 }
 
 const getInputElementByWrapperWithProps = (wrapper, inputType=defaultInputType) => wrapper.find(inputType);

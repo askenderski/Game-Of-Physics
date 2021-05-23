@@ -4,14 +4,14 @@ import InputTestsDataAndUtilities from "./InputTestsDataAndUtilities";
 export default function executeTests(
     {createFormWithInputComponent, renderInputComponentWithPropGetter}
     ) {
-    describe("Input works correctly with specific type", () => {
-        test("Input renders corresponding element when inputType field is given", () => {
+    describe("WithInput works correctly with specific type", () => {
+        test("WithInput renders corresponding element when inputType field is given", () => {
             const {getInnerInputElement} = renderInputComponentWithPropGetter();
 
             expect(getInnerInputElement()).toHaveLength(1);
         });
 
-        test("Input passes props to specific type correctly", () => {
+        test("WithInput passes props to specific type correctly", () => {
             const propsToPass = {
                 a: "a",
                 b: "b"
@@ -25,7 +25,7 @@ export default function executeTests(
             });
         });
 
-        test("Input passes context to specific type correctly", () => {
+        test("WithInput passes context to specific type correctly", () => {
             const formValue = "form a";
             const formProps = {value: formValue};
 
@@ -34,7 +34,7 @@ export default function executeTests(
             expect(getProp("value")).toBe(formValue);
         });
 
-        test("Input works with no name passed", () => {
+        test("WithInput works with no name passed", () => {
             expect(renderInputComponentWithPropGetter).not.toThrow();
         });
 
@@ -48,7 +48,7 @@ export default function executeTests(
             expect(getProp("value")).toBe(manuallyPassedValue);
         });
 
-        test("Input passes className correctly to input of specific type", () => {
+        test("WithInput passes className correctly to input of specific type", () => {
             const className = "someClassName";
 
             const {getInnerInputElement} = renderInputComponentWithPropGetter({className});
@@ -59,7 +59,7 @@ export default function executeTests(
             expect(classNamePassedToInput).toBe(className);
         });
 
-        test("Input passes default className correctly to input of specific type", () => {
+        test("WithInput passes default className correctly to input of specific type", () => {
             const {getInnerInputElement} = renderInputComponentWithPropGetter();
 
             const inputElement = getInnerInputElement();

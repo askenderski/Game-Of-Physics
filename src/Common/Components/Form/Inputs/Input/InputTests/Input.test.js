@@ -96,7 +96,7 @@ describe('unit tests', () => {
     });
 });
 
-//This tests the integration of the Input component with the getInputPropsFromFormData function
+//This tests the integration of the WithInput component with the getInputPropsFromFormData function
 describe('integration tests', () => {
     beforeEach(() => {
         getInputPropsFromFormData.mockImplementation(function (...props) {
