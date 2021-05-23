@@ -32,38 +32,41 @@ function getPropExtractorByFormData(formData, name, inputType) {
 
 function createFormWithInputComponentUnit({propsToPassManually, formProps}) {
     const name = propsToPassManually.name || "someName";
-    const formValuesToBePassed = {};
-    const inputType = propsToPassManually.inputType || InputTestsDataAndUtilities.inputTypeDifferentFromDefault;
+    const inputType = propsToPassManually.inputType || InputTestsDataAndUtilities.defaultInputType;
 
     getInputPropsFromFormData.mockImplementationOnce((formData, curName, curInputType) => {
-        if (formData === formValuesToBePassed && name === curName && curInputType === inputType) {
+        if (name === curName && curInputType === inputType) {
             return formProps;
         }
 
         return {};
     });
 
-    return createFormWithInputComponentIntegrationWithPropGetter({propsToPassManually,
-        formProps: formValuesToBePassed});
-}
-
-function createFormWithInputComponentIntegrationWithPropGetter({propsToPassManually, formProps}) {
-    const name = propsToPassManually.name || "someName";
-    const inputType = propsToPassManually.inputType || InputTestsDataAndUtilities.inputTypeDifferentFromDefault;
-    const inputElementType = inputType;
-
     const input = InputTestsDataAndUtilities.renderInputWithPropGetter(
         {name, inputType, ...propsToPassManually},
         formProps
     );
-    const inputElement = InputTestsDataAndUtilities.getInputElementByWrapperWithProps(input, inputElementType);
+    const inputElement = InputTestsDataAndUtilities.getInputElementByWrapperWithProps(input, inputType);
+
+    return {getProp: propName => InputTestsDataAndUtilities.getProp(inputElement, propName)};
+}
+
+function createFormWithInputComponentIntegrationWithPropGetter({propsToPassManually, formProps}) {
+    const name = propsToPassManually.name || "someName";
+    const inputType = propsToPassManually.inputType || InputTestsDataAndUtilities.defaultInputType;
+
+    const input = InputTestsDataAndUtilities.renderInputWithPropGetter(
+        {name, inputType, ...propsToPassManually},
+        {values: {[name]: formProps.value}}
+    );
+    const inputElement = InputTestsDataAndUtilities.getInputElementByWrapperWithProps(input, inputType);
 
     return {getProp: propName => InputTestsDataAndUtilities.getProp(inputElement, propName)};
 }
 
 function createFormWithInputComponentIntegrationWithoutPropGetter({propsToPassManually, formProps}) {
     const name = propsToPassManually.name || "someName";
-    const inputType = propsToPassManually.inputType || InputTestsDataAndUtilities.inputTypeDifferentFromDefault;
+    const inputType = propsToPassManually.inputType || InputTestsDataAndUtilities.defaultInputType;
 
     const input = InputTestsDataAndUtilities.renderInput(
         {name, inputType, "data-testid": "input", ...propsToPassManually},
@@ -89,11 +92,6 @@ describe('unit tests', () => {
             const InputWithPropGetter = InputTestsDataAndUtilities.renderInputWithPropGetter(...args);
 
             return {getInnerInputElement: ()=>InputTestsDataAndUtilities.getInputElementByWrapperWithProps(InputWithPropGetter)};
-        },
-        renderInputComponentWithPropGetterWithoutDefaults: (...args) => {
-            const InputWithPropGetter = InputTestsDataAndUtilities.renderInputWithPropGetterWithoutDefaults(...args);
-
-            return {getInnerInputElement: ()=>InputTestsDataAndUtilities.getInputElementByWrapperWithProps(InputWithPropGetter)};
         }
     });
 });
@@ -112,12 +110,6 @@ describe('integration tests', () => {
             createFormWithInputComponent: createFormWithInputComponentIntegrationWithPropGetter,
             renderInputComponentWithPropGetter: (...args) => {
                 const InputWithPropGetter = InputTestsDataAndUtilities.renderInputWithPropGetter(...args);
-
-                return {getInnerInputElement: ()=>
-                        InputTestsDataAndUtilities.getInputElementByWrapperWithProps(InputWithPropGetter)};
-            },
-            renderInputComponentWithPropGetterWithoutDefaults: (...args) => {
-                const InputWithPropGetter = InputTestsDataAndUtilities.renderInputWithPropGetterWithoutDefaults(...args);
 
                 return {getInnerInputElement: ()=>
                         InputTestsDataAndUtilities.getInputElementByWrapperWithProps(InputWithPropGetter)};

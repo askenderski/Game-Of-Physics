@@ -2,7 +2,7 @@ import style from "../../Input.module.scss";
 import InputTestsDataAndUtilities from "./InputTestsDataAndUtilities";
 
 export default function executeTests(
-    {createFormWithInputComponent, renderInputComponentWithPropGetter, renderInputComponentWithPropGetterWithoutDefaults}
+    {createFormWithInputComponent, renderInputComponentWithPropGetter}
     ) {
     describe("Input works correctly with specific type", () => {
         test("Input renders corresponding element when inputType field is given", () => {
@@ -25,20 +25,27 @@ export default function executeTests(
             });
         });
 
+        test("Input passes context to specific type correctly", () => {
+            const formValue = "form a";
+            const formProps = {value: formValue};
+
+            const {getProp} = createFormWithInputComponent({propsToPassManually: {}, formProps});
+
+            expect(getProp("value")).toBe(formValue);
+        });
+
         test("Input works with no name passed", () => {
-            expect(renderInputComponentWithPropGetterWithoutDefaults.bind(
-                renderInputComponentWithPropGetterWithoutDefaults, {inputType: InputTestsDataAndUtilities.defaultInputType}
-            )).not.toThrow();
+            expect(renderInputComponentWithPropGetter).not.toThrow();
         });
 
         test("Direct input props overwrite props gotten from form context", () => {
-            const [formA, manuallyPassedA] = ["form a", "manual a"];
-            const formProps = {values: {a: formA}};
-            const propsToPassManually = {a: manuallyPassedA, name: "a"};
+            const [formValue, manuallyPassedValue] = ["form a", "manual a"];
+            const formProps = {value: formValue};
+            const propsToPassManually = {value: manuallyPassedValue, name: "a"};
 
             const {getProp} = createFormWithInputComponent({propsToPassManually, formProps});
 
-            expect(getProp("a")).toBe(manuallyPassedA);
+            expect(getProp("value")).toBe(manuallyPassedValue);
         });
 
         test("Input passes className correctly to input of specific type", () => {
