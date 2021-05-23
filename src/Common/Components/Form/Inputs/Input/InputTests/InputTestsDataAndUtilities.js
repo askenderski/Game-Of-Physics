@@ -5,8 +5,6 @@ import {render} from "@testing-library/react";
 
 const defaultInputType = "input";
 
-const inputTypeDifferentFromDefault = "button";
-
 const getDefaultContext = props => ({values: {[props.name]: ""}});
 
 const renderInputWithPropGetter = ({inputType=defaultInputType, ...rest} = {}, context) =>
@@ -24,7 +22,6 @@ const getProp = (element, prop) => element.prop(prop);
 
 const dataAndUtilities = {
     defaultInputType,
-    inputTypeDifferentFromDefault,
     renderInputWithPropGetter,
     renderInputWithPropGetterWithoutDefaults,
     renderInput,
