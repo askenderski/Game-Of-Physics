@@ -1,14 +1,13 @@
-import getComponentFromType from "../typeToComponentMapping";
 import {mount} from "enzyme";
 import FormContext from "../../../FormContext";
 import Input from "./Input";
 import {render} from "@testing-library/react";
 
 const defaultInputType = "input";
-const defaultInputElementType = getComponentFromType(defaultInputType);
+const defaultInputElementType = defaultInputType;
 
 const inputTypeDifferentFromDefault = "button";
-const inputElementTypeDifferentFromDefault = getComponentFromType(inputTypeDifferentFromDefault);
+const inputElementTypeDifferentFromDefault = inputTypeDifferentFromDefault;
 
 const getDefaultContext = props => ({values: {[props.name]: ""}});
 

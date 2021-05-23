@@ -1,6 +1,5 @@
 import InputTestsDataAndUtilities from "./InputTestsDataAndUtilities";
 import getInputPropsFromFormData from "../getInputPropsFromFormData/getInputPropsFromFormData";
-import getComponentFromType from "../typeToComponentMapping";
 import executeTests from "./InputTests";
 import executeGetInputPropsFromFormDataModuleTests
     from "../getInputPropsFromFormData/getInputPropsFromFormDataModuleTests";
@@ -51,7 +50,7 @@ function createFormWithInputComponentUnit({propsToPassManually, formProps}) {
 function createFormWithInputComponentIntegrationWithPropGetter({propsToPassManually, formProps}) {
     const name = propsToPassManually.name || "someName";
     const inputType = propsToPassManually.inputType || InputTestsDataAndUtilities.inputTypeDifferentFromDefault;
-    const inputElementType = getComponentFromType(inputType);
+    const inputElementType = inputType;
 
     const input = InputTestsDataAndUtilities.renderInputWithPropGetter(
         {name, inputType, ...propsToPassManually},
