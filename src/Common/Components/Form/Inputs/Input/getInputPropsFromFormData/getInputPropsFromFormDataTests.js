@@ -1,9 +1,5 @@
 function runTests({getPropExtractorByFormData}) {
-    const defaultPropsForAllTests = {
-        setFieldValue: () => {
-        },
-        values: {}
-    };
+    const defaultPropsForAllTests = { setFieldValue: () => {}, values: {} };
 
     const defaultInputType = "input";
 
