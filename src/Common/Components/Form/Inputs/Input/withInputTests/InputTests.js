@@ -1,4 +1,3 @@
-import style from "../../Input.module.scss";
 import InputTestsDataAndUtilities from "./InputTestsDataAndUtilities";
 
 export default function executeTests(
@@ -12,30 +11,32 @@ export default function executeTests(
         });
 
         test("WithInput passes props to specific type correctly", () => {
-            const propsToPass = {
+            const propsToPassManually = {
                 a: "a",
                 b: "b"
             };
 
-            const {getInnerInputElement} = renderInputComponentWithPropGetter(propsToPass);
+            const {getInnerInputElement} = renderInputComponentWithPropGetter({propsToPassManually});
             const inputElement = getInnerInputElement();
 
-            Object.entries(propsToPass).forEach(([propName, propValue]) => {
+            Object.entries(propsToPassManually).forEach(([propName, propValue]) => {
                 expect(InputTestsDataAndUtilities.getProp(inputElement, propName)).toBe(propValue);
             });
         });
 
-        test("WithInput passes context to specific type correctly", () => {
+        test("WithInput works with no name passed", () => {
+            expect(
+                renderInputComponentWithPropGetter.bind(renderInputComponentWithPropGetter, {propsToPassManually: {}})
+            ).not.toThrow();
+        });
+
+        test("WithInput passes context props to specific type correctly", () => {
             const formValue = "form a";
             const formProps = {value: formValue};
 
-            const {getProp} = createFormWithInputComponent({propsToPassManually: {}, formProps});
+            const {getProp} = createFormWithInputComponent({formProps});
 
             expect(getProp("value")).toBe(formValue);
-        });
-
-        test("WithInput works with no name passed", () => {
-            expect(renderInputComponentWithPropGetter).not.toThrow();
         });
 
         test("Direct input props overwrite props gotten from form context", () => {
@@ -48,24 +49,38 @@ export default function executeTests(
             expect(getProp("value")).toBe(manuallyPassedValue);
         });
 
-        test("WithInput passes className correctly to input of specific type", () => {
-            const className = "someClassName";
+        test("WithInput passes default props correctly to input of specific type", () => {
+            const defaultProps = {a: "1", b: "2"};
 
-            const {getInnerInputElement} = renderInputComponentWithPropGetter({className});
+            const {getInnerInputElement} = renderInputComponentWithPropGetter({options: {defaultProps}});
 
             const inputElement = getInnerInputElement();
-            const classNamePassedToInput = InputTestsDataAndUtilities.getProp(inputElement, "className");
 
-            expect(classNamePassedToInput).toBe(className);
+            for (const defaultPropName in defaultProps) {
+                const defaultPropPassedToInput = InputTestsDataAndUtilities.getProp(inputElement, defaultPropName);
+
+                expect(defaultPropPassedToInput).toBe(defaultProps[defaultPropName]);
+            }
         });
 
-        test("WithInput passes default className correctly to input of specific type", () => {
-            const {getInnerInputElement} = renderInputComponentWithPropGetter();
+        test("Form props overwrite default props", () => {
+            const [defaultValue, formValue] = ["default a", "form a"];
+            const defaultProps = {value: defaultValue};
+            const formProps = {value: formValue};
 
-            const inputElement = getInnerInputElement();
-            const classNamePassedToInput = InputTestsDataAndUtilities.getProp(inputElement, "className");
+            const {getProp} = createFormWithInputComponent({defaultProps, formProps});
 
-            expect(classNamePassedToInput).toBe(style.input);
+            expect(getProp("value")).toBe(formValue);
+        });
+
+        test("Direct input props overwrite default props", () => {
+            const [defaultValue, manuallyPassedValue] = ["default a", "manual a"];
+            const defaultProps = {value: defaultValue};
+            const propsToPassManually = {value: manuallyPassedValue, name: "a"};
+
+            const {getInnerInputElement} = renderInputComponentWithPropGetter({defaultProps, propsToPassManually});
+
+            expect(InputTestsDataAndUtilities.getProp(getInnerInputElement(), "value")).toBe(manuallyPassedValue);
         });
     });
 };

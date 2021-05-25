@@ -1,15 +1,15 @@
-import style from "../../Input.module.scss";
 import FormContext from "../../../FormContext";
 import {useContext} from "react";
 import getInputPropsFromFormData from "../getInputPropsFromFormData/getInputPropsFromFormData";
 
-function withInput(inputType, {className=style[inputType]}={}) {
+function withInput(Component, options={}) {
+    const {defaultProps} = options;
+
     return function (props) {
         const formData = useContext(FormContext);
-        const contextProps = getInputPropsFromFormData(formData, props.name, inputType);
-        const Component = inputType;
+        const contextProps = getInputPropsFromFormData(formData, props.name, Component);
 
-        return <Component {...contextProps} className={className} {...props}/>;
+        return <Component {...contextProps} {...defaultProps} {...props}/>;
     }
 }
 

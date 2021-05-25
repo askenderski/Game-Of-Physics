@@ -30,7 +30,7 @@ function getPropExtractorByFormData(formData, name, inputType) {
     };
 }
 
-function createFormWithInputComponentUnit({propsToPassManually, formProps}) {
+function createFormWithInputComponentUnit({propsToPassManually={}, formProps, options}={}) {
     const name = propsToPassManually.name || "someName";
     const inputType = propsToPassManually.inputType || InputTestsDataAndUtilities.defaultInputType;
 
@@ -43,21 +43,26 @@ function createFormWithInputComponentUnit({propsToPassManually, formProps}) {
     });
 
     const input = InputTestsDataAndUtilities.renderInputWithPropGetter(
-        {name, inputType, ...propsToPassManually},
-        formProps
-    );
+        {
+            propsToPassManually: {name, inputType, ...propsToPassManually},
+            formProps,
+            options
+        });
     const inputElement = InputTestsDataAndUtilities.getInputElementByWrapperWithProps(input, inputType);
 
     return {getProp: propName => InputTestsDataAndUtilities.getProp(inputElement, propName)};
 }
 
-function createFormWithInputComponentIntegrationWithPropGetter({propsToPassManually, formProps}) {
+function createFormWithInputComponentIntegrationWithPropGetter({propsToPassManually={}, formProps, options}={}) {
     const name = propsToPassManually.name || "someName";
     const inputType = propsToPassManually.inputType || InputTestsDataAndUtilities.defaultInputType;
 
     const input = InputTestsDataAndUtilities.renderInputWithPropGetter(
-        {name, inputType, ...propsToPassManually},
-        {values: {[name]: formProps.value}}
+        {
+            propsToPassManually: {name, inputType, ...propsToPassManually},
+            formProps: {values: {[name]: formProps.value}},
+            options
+        }
     );
     const inputElement = InputTestsDataAndUtilities.getInputElementByWrapperWithProps(input, inputType);
 
