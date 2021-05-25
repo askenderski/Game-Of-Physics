@@ -1,44 +1,47 @@
 import ButtonInput from "./ButtonInput";
 import {fireEvent, render} from "@testing-library/react";
 import {mount} from "enzyme";
-import ButtonInputTests from "./ButtonInputTests";
+import executeButtonInputTests from "./ButtonInputTests";
 
 const defaultButtonType = "input";
 
 function getButtonInput(props = {}) {
     let numberOfClicks = 0;
     function WrapperComponent({type = defaultButtonType, ...rest}) {
-        return <ButtonInput type={type} onClick={e=>numberOfClicks++} {...rest}/>;
+        return <ButtonInput type={type} {...rest} onClick={e=>numberOfClicks++}/>;
     }
 
     const component = <WrapperComponent {...props} />;
-    const buttonInput = render(component);
-    const buttonElement = getButtonElementByButtonInput(buttonInput);
+    const buttonInput = renderButtonInput(component);
+    const innerButtonElement = getInnerButtonElementByButtonInput(buttonInput);
 
     return {
-        getNumberOfClicks: () => numberOfClicks, click: ()=>fireEvent.click(buttonElement)
+        getNumberOfClicks: () => numberOfClicks,
+        click: () => fireEvent.click(innerButtonElement)
     };
 }
 
-const getButtonElementByButtonInput = buttonInput => buttonInput.getByLabelText("input");
+const renderButtonInput = buttonInput => render(buttonInput);
+const getInnerButtonElementByButtonInput = buttonInput => buttonInput.getByLabelText("input");
 
 function getButtonInputWithPropGetter(props, {expectedButtonType}={}) {
     const buttonInput = renderButtonInputWithPropGetter(props);
-    const buttonElement = getButtonElementByWrapperWithProps(buttonInput, expectedButtonType);
+    const innerButtonElement = getInnerButtonElementByWrapperWithProps(buttonInput, expectedButtonType);
 
     return {
-        doesInnerElementExist: () => buttonElement.length === 1,
-        getInnerElementProp: prop => getProp(buttonElement, prop)
+        doesInnerElementExist: () => innerButtonElement.length === 1,
+        getInnerElementProp: prop => getProp(innerButtonElement, prop)
     };
 }
 
 //mount is used since shallow doesn't work with ComponentType gotten dynamically
 const renderButtonInputWithPropGetter = ({type=defaultButtonType, ...rest}) =>
     mount(<ButtonInput type={type} {...rest}/>);
-const getButtonElementByWrapperWithProps = (wrapper, buttonType = defaultButtonType) => wrapper.find(buttonType);
+const getInnerButtonElementByWrapperWithProps = (wrapper, buttonType = defaultButtonType) =>
+    wrapper.find(buttonType);
 
 const getProp = (element, prop) => element.prop(prop);
 
 describe("unit", ()=>{
-    ButtonInputTests({getButtonInput, getButtonInputWithPropGetter});
+    executeButtonInputTests({getButtonInput, getButtonInputWithPropGetter});
 });
