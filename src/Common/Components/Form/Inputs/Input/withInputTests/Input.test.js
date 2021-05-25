@@ -17,7 +17,7 @@ jest.mock("../getInputPropsFromFormData/getInputPropsFromFormData", () => {
 
 function getPropExtractorByFormData(formData, name, inputType) {
     const input = createFormWithInputComponentIntegrationWithoutPropGetter({
-        propsToPassManually: {name, inputType}, formProps: formData
+        inputType, propsToPassManually: {name}, formProps: formData
     });
 
     return {

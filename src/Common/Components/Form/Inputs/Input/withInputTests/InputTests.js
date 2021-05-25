@@ -3,14 +3,14 @@ import InputTestsDataAndUtilities from "./InputTestsDataAndUtilities";
 export default function executeTests(
     {createFormWithInputComponent, renderInputComponentWithPropGetter}
     ) {
-    describe("WithInput works correctly with specific type", () => {
-        test("WithInput renders corresponding element when inputType field is given", () => {
+    describe("withInput works correctly with specific type", () => {
+        test("withInput renders corresponding element when inputType field is given", () => {
             const {getInnerInputElement} = renderInputComponentWithPropGetter();
 
             expect(getInnerInputElement()).toHaveLength(1);
         });
 
-        test("WithInput passes props to specific type correctly", () => {
+        test("withInput passes props to specific type correctly", () => {
             const propsToPassManually = {
                 a: "a",
                 b: "b"
@@ -24,13 +24,13 @@ export default function executeTests(
             });
         });
 
-        test("WithInput works with no name passed", () => {
+        test("withInput works with no name passed", () => {
             expect(
                 renderInputComponentWithPropGetter.bind(renderInputComponentWithPropGetter, {propsToPassManually: {}})
             ).not.toThrow();
         });
 
-        test("WithInput passes context props to specific type correctly", () => {
+        test("withInput passes context props to specific type correctly", () => {
             const formValue = "form a";
             const formProps = {value: formValue};
 
@@ -49,7 +49,7 @@ export default function executeTests(
             expect(getProp("value")).toBe(manuallyPassedValue);
         });
 
-        test("WithInput passes default props correctly to input of specific type", () => {
+        test("withInput passes default props correctly to input of specific type", () => {
             const defaultProps = {a: "1", b: "2"};
 
             const {getInnerInputElement} = renderInputComponentWithPropGetter({options: {defaultProps}});
