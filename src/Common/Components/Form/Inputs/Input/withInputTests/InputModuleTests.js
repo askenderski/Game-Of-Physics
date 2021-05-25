@@ -5,15 +5,16 @@ import executeGetInputPropsFromFormDataModuleTests
 const executeModuleTests = () => {
     describe('WithInput tests', () => {
         describe("integration with all", () => {
-            executeTests(
-                {createFormWithInputComponent: ()=>throw new Error()}
-            );
+            executeTests({
+                createFormWithInputComponent: ()=>throw new Error(),
+                renderInputComponentWithPropGetter: ()=>throw new Error()
+            });
         });
 
         describe("integration with getInputPropsFromFormData", () => {
-            executeGetInputPropsFromFormDataModuleTests(
-                {getPropExtractorByFormData: ()=>throw new Error()}
-                );
+            executeGetInputPropsFromFormDataModuleTests({
+                    getPropExtractorByFormData: ()=>throw new Error()
+            });
         });
     });
 };
