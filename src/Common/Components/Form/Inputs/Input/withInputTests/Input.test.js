@@ -73,13 +73,18 @@ function createFormWithInputComponentIntegrationWithPropGetter(
     return {getProp: propName => InputTestsDataAndUtilities.getProp(inputElement, propName)};
 }
 
-function createFormWithInputComponentIntegrationWithoutPropGetter({propsToPassManually, formProps}) {
+function createFormWithInputComponentIntegrationWithoutPropGetter(
+    {inputType=InputTestsDataAndUtilities.defaultInputType, propsToPassManually, formProps, options}
+    ) {
     const name = propsToPassManually.name || "someName";
-    const inputType = propsToPassManually.inputType || InputTestsDataAndUtilities.defaultInputType;
 
     const input = InputTestsDataAndUtilities.renderInput(
-        {name, inputType, "data-testid": "input", ...propsToPassManually},
-        formProps
+        {
+            propsToPassManually: {name, "data-testid": "input", ...propsToPassManually},
+            inputType,
+            formProps,
+            options
+        }
     );
 
     return {

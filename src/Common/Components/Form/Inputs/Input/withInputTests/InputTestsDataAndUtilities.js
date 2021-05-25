@@ -15,15 +15,14 @@ const renderInputWithPropGetter = ({inputType=defaultInputType, propsToPassManua
     return mount(<FormContext.Provider value={contextToPass}><Component {...propsToPassManually}/></FormContext.Provider>);
 };
 
-const renderInput = (props = {}, context) => {
-    const {inputType = defaultInputType, ...rest} = props;
-    const contextToPass = {...getDefaultContext({inputType, ...rest}), ...context};
+const renderInput = ({inputType=defaultInputType, propsToPassManually = {}, options, formProps: context}) => {
+    const contextToPass = {...getDefaultContext({inputType, ...propsToPassManually}), ...context};
 
-    const Component = withInput(inputType);
+    const Component = withInput(inputType, options);
 
     return render(<FormContext.Provider
-        value={contextToPass}><Component inputType={inputType} {...rest}/></FormContext.Provider>);
-}
+        value={contextToPass}><Component {...propsToPassManually}/></FormContext.Provider>);
+};
 
 const getInputElementByWrapperWithProps = (wrapper, inputType=defaultInputType) => wrapper.find(inputType);
 const getProp = (element, prop) => element.prop(prop);
