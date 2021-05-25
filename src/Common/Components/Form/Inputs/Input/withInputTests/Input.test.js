@@ -33,20 +33,12 @@ function getPropExtractorByFormData(formData, name, inputType) {
 function createFormWithInputComponentUnit(
     {inputType=InputTestsDataAndUtilities.defaultInputType, propsToPassManually={}, formProps, options}={}
     ) {
-    const name = propsToPassManually.name || "someName";
-
-    getInputPropsFromFormData.mockImplementationOnce((formData, curName, curInputType) => {
-        if (name === curName && curInputType === inputType) {
-            return formProps;
-        }
-
-        return {};
-    });
+    getInputPropsFromFormData.mockImplementationOnce(() => formProps);
 
     const input = InputTestsDataAndUtilities.renderInputWithPropGetter(
         {
             inputType,
-            propsToPassManually: {name, ...propsToPassManually},
+            propsToPassManually,
             formProps,
             options
         });
@@ -76,11 +68,9 @@ function createFormWithInputComponentIntegrationWithPropGetter(
 function createFormWithInputComponentIntegrationWithoutPropGetter(
     {inputType=InputTestsDataAndUtilities.defaultInputType, propsToPassManually, formProps, options}
     ) {
-    const name = propsToPassManually.name || "someName";
-
     const input = InputTestsDataAndUtilities.renderInput(
         {
-            propsToPassManually: {name, "data-testid": "input", ...propsToPassManually},
+            propsToPassManually: {"data-testid": "input", ...propsToPassManually},
             inputType,
             formProps,
             options
@@ -88,7 +78,7 @@ function createFormWithInputComponentIntegrationWithoutPropGetter(
     );
 
     return {
-        isValueSameAs: value => input.getByDisplayValue(value) !== undefined,
+        isValueSameAs: value => input.getByTestId("input").value === value,
         changeValue: value => fireEvent.change(input.getByTestId("input"), {target: {value}})
     };
 }
