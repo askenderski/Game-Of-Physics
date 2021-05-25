@@ -30,7 +30,7 @@ function getPropExtractorByFormData(formData, name, inputType) {
     };
 }
 
-function createFormWithInputComponentUnit(
+function createFormWithInputComponentUnitWithPropGetter(
     {inputType=InputTestsDataAndUtilities.defaultInputType, propsToPassManually={}, formProps, options}={}
     ) {
     getInputPropsFromFormData.mockImplementationOnce(() => formProps);
@@ -91,7 +91,7 @@ describe('unit tests', () => {
     });
 
     executeTests({
-        createFormWithInputComponent: createFormWithInputComponentUnit,
+        createFormWithInputComponent: createFormWithInputComponentUnitWithPropGetter,
         renderInputComponentWithPropGetter: (...args) => {
             const InputWithPropGetter = InputTestsDataAndUtilities.renderInputWithPropGetter(...args);
 
