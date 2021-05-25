@@ -7,13 +7,12 @@ const defaultInputType = "input";
 
 const getDefaultContext = props => ({values: {[props.name]: ""}});
 
-const renderInputWithPropGetter = ({propsToPassManually = {}, options, formProps: context}={}) => {
-    const {inputType = defaultInputType, ...rest} = propsToPassManually;
-    const contextToPass = {...getDefaultContext({inputType, ...rest}), ...context};
+const renderInputWithPropGetter = ({inputType=defaultInputType, propsToPassManually = {}, options, formProps: context}={}) => {
+    const contextToPass = {...getDefaultContext({inputType, ...propsToPassManually}), ...context};
 
     const Component = withInput(inputType, options);
 
-    return mount(<FormContext.Provider value={contextToPass}><Component {...rest}/></FormContext.Provider>);
+    return mount(<FormContext.Provider value={contextToPass}><Component {...propsToPassManually}/></FormContext.Provider>);
 };
 
 const renderInput = (props = {}, context) => {

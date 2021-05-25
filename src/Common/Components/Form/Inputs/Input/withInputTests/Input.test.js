@@ -30,9 +30,10 @@ function getPropExtractorByFormData(formData, name, inputType) {
     };
 }
 
-function createFormWithInputComponentUnit({propsToPassManually={}, formProps, options}={}) {
+function createFormWithInputComponentUnit(
+    {inputType=InputTestsDataAndUtilities.defaultInputType, propsToPassManually={}, formProps, options}={}
+    ) {
     const name = propsToPassManually.name || "someName";
-    const inputType = propsToPassManually.inputType || InputTestsDataAndUtilities.defaultInputType;
 
     getInputPropsFromFormData.mockImplementationOnce((formData, curName, curInputType) => {
         if (name === curName && curInputType === inputType) {
@@ -44,7 +45,8 @@ function createFormWithInputComponentUnit({propsToPassManually={}, formProps, op
 
     const input = InputTestsDataAndUtilities.renderInputWithPropGetter(
         {
-            propsToPassManually: {name, inputType, ...propsToPassManually},
+            inputType,
+            propsToPassManually: {name, ...propsToPassManually},
             formProps,
             options
         });
@@ -53,13 +55,15 @@ function createFormWithInputComponentUnit({propsToPassManually={}, formProps, op
     return {getProp: propName => InputTestsDataAndUtilities.getProp(inputElement, propName)};
 }
 
-function createFormWithInputComponentIntegrationWithPropGetter({propsToPassManually={}, formProps, options}={}) {
+function createFormWithInputComponentIntegrationWithPropGetter(
+    {inputType=InputTestsDataAndUtilities.defaultInputType, propsToPassManually={}, formProps, options}={}
+    ) {
     const name = propsToPassManually.name || "someName";
-    const inputType = propsToPassManually.inputType || InputTestsDataAndUtilities.defaultInputType;
 
     const input = InputTestsDataAndUtilities.renderInputWithPropGetter(
         {
-            propsToPassManually: {name, inputType, ...propsToPassManually},
+            inputType,
+            propsToPassManually: {name, ...propsToPassManually},
             formProps: {values: {[name]: formProps.value}},
             options
         }
