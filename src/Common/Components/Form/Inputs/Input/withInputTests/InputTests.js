@@ -82,5 +82,66 @@ export default function executeTests(
 
             expect(InputTestsDataAndUtilities.getProp(getInnerInputElement(), "value")).toBe(manuallyPassedValue);
         });
+
+        test("withInput passes type-specific form props correctly to input of specific type", () => {
+            const typeSpecificFormProps = {a: "1", b: "2"};
+            const formProps = {identifierOfFormData: "a"};
+            const name = "name to use";
+
+            const {getInnerInputElement} = renderInputComponentWithPropGetter({
+                formProps,
+                propsToPassManually: {name},
+                options: {
+                    getFormProps: (formDataInFormProps, nameInFormProps) => {
+                        if (formDataInFormProps.identifierOfFormData === formProps.identifierOfFormData &&
+                            nameInFormProps === name) {
+                            return typeSpecificFormProps;
+                        }
+
+                        return {};
+                    }
+                }
+            });
+
+            const inputElement = getInnerInputElement();
+
+            for (const typeSpecificFormPropName in typeSpecificFormProps) {
+                const defaultPropPassedToInput = InputTestsDataAndUtilities.getProp(inputElement, typeSpecificFormPropName);
+
+                expect(defaultPropPassedToInput).toBe(typeSpecificFormProps[typeSpecificFormPropName]);
+            }
+        });
+
+        test("Type-specific form props overwrite generic form props", () => {
+            const [typeSpecificValue, formValue] = ["type-specific a", "form a"];
+            const typeSpecificFormProps = {value: typeSpecificValue};
+            const formProps = {value: formValue};
+
+            const {getProp} = createFormWithInputComponent({options: {getFormProps: ()=>typeSpecificFormProps}, formProps});
+
+            expect(getProp("value")).toBe(typeSpecificValue);
+        });
+
+        test("Type-specific form props are overwritten by default props", () => {
+            const [typeSpecificValue, defaultValue] = ["type-specific a", "default a"];
+            const typeSpecificFormProps = {value: typeSpecificValue};
+            const defaultProps = {value: defaultValue};
+
+            const {getProp} =
+                createFormWithInputComponent({options: {getFormProps: ()=>typeSpecificFormProps, defaultProps}});
+
+            expect(getProp("value")).toBe(defaultValue);
+        });
+
+        test("Type-specific form props are overwritten by direct props", () => {
+            const [typeSpecificValue, manuallyPassedValue] = ["type-specific a", "default a"];
+            const typeSpecificFormProps = {value: typeSpecificValue};
+            const propsToPassManually = {value: manuallyPassedValue};
+
+            const {getProp} =
+                createFormWithInputComponent({options: {getFormProps: ()=>typeSpecificFormProps}, propsToPassManually});
+
+            expect(getProp("value")).toBe(manuallyPassedValue);
+        });
     });
 };

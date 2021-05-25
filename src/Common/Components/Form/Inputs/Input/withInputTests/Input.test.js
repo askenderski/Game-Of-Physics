@@ -48,7 +48,7 @@ function createFormWithInputComponentUnitWithPropGetter(
 }
 
 function createFormWithInputComponentIntegrationWithPropGetter(
-    {inputType=InputTestsDataAndUtilities.defaultInputType, propsToPassManually={}, formProps, options}={}
+    {inputType=InputTestsDataAndUtilities.defaultInputType, propsToPassManually={}, formProps={}, options}={}
     ) {
     const name = propsToPassManually.name || "someName";
 
