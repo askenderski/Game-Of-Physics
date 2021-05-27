@@ -1,17 +1,17 @@
-import FieldInput from "./FieldInput";
+import FieldInputComponent from "./FieldInputComponent";
 import {shallow} from "enzyme";
 import {fireEvent, render} from "@testing-library/react";
-import executeTests from "./FieldInputTests";
+import executeTests from "./FieldInputComponentTests";
 
-const renderFieldInputWithPropGetter = props => shallow(<FieldInput {...props} />);
-const getInnerInputElementByFieldInput = fieldInput => fieldInput.find("input");
+const renderFieldInputComponentWithPropGetter = props => shallow(<FieldInputComponent {...props} />);
+const getInnerInputElementByFieldInputComponent = fieldInputComponent => fieldInputComponent.find("input");
 const getProp = (inputElement, propName) => inputElement.prop(propName);
 
 describe("unit tests", () => {
     executeTests({
         getFieldInputWithPropGetter: props => {
-            const fieldInput = renderFieldInputWithPropGetter(props);
-            const innerInputElement = getInnerInputElementByFieldInput(fieldInput);
+            const fieldInput = renderFieldInputComponentWithPropGetter(props);
+            const innerInputElement = getInnerInputElementByFieldInputComponent(fieldInput);
 
             return {
                 doesInnerInputElementExist: () => innerInputElement.length === 1,
@@ -19,7 +19,7 @@ describe("unit tests", () => {
             };
         },
         getFieldInput: ({value, ...rest}) => {
-            const fieldInput = render(<FieldInput value={value} {...rest}/>);
+            const fieldInput = render(<FieldInputComponent value={value} {...rest}/>);
             const innerInputElement = fieldInput.getByDisplayValue(value);
 
             return {changeValue: value => fireEvent.change(innerInputElement, {target: {value}})};

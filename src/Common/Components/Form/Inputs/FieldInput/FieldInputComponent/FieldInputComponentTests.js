@@ -1,13 +1,13 @@
 export default ({getFieldInput, getFieldInputWithPropGetter}) => {
-//Since FieldInput currently has no functionality other than to render the React input component, it is enough to show the
+//Since FieldInputComponent currently has no functionality other than to render the React input component, it is enough to show the
 // input component is rendered, props are passed to it and show an example of functionality.
-    test("FieldInput renders input component", () => {
+    test("FieldInputComponent renders input component", () => {
         const {doesInnerInputElementExist} = getFieldInputWithPropGetter();
 
         expect(doesInnerInputElementExist()).toBe(true);
     });
 
-    test("FieldInput passes props to input", () => {
+    test("FieldInputComponent passes props to input", () => {
         const [propName, propValue] = ["a", 1];
         const props = {[propName]: propValue};
 
@@ -16,7 +16,7 @@ export default ({getFieldInput, getFieldInputWithPropGetter}) => {
         expect(getPropInInnerInputElement(propName)).toBe(propValue);
     });
 
-    test("FieldInput calls onChange correctly", () => {
+    test("FieldInputComponent calls onChange correctly", () => {
         const newValue = "1";
         const beginningValue = "a";
 
