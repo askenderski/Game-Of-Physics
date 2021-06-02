@@ -2,18 +2,27 @@ import executeTests from "./InputTests";
 import executeGetInputPropsFromFormDataModuleTests
     from "../getInputPropsFromFormData/getInputPropsFromFormDataModuleTests";
 
-const executeModuleTests = () => {
+const executeModuleTests =
+    ({createFormWithInputComponent, renderInputComponentWithPropGetter, renderInputComponentWithoutPropGetter}) => {
     describe('WithInput tests', () => {
         describe("integration with all", () => {
             executeTests({
-                createFormWithInputComponent: ()=>throw new Error(),
-                renderInputComponentWithPropGetter: ()=>throw new Error()
+                createFormWithInputComponent,
+                renderInputComponentWithPropGetter
             });
         });
 
         describe("integration with getInputPropsFromFormData", () => {
             executeGetInputPropsFromFormDataModuleTests({
-                    getPropExtractorByFormData: ()=>throw new Error()
+                getPropExtractorByFormData(formData, name) {
+                    const {innerInputElement} = renderInputComponentWithoutPropGetter(formData, name);
+
+                    return {
+                        isValueSameAs(value) {
+                            return innerInputElement.value === value;
+                        }
+                    };
+                }
             });
         });
     });
