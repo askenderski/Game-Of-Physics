@@ -12,15 +12,12 @@ jest.mock("../../Utilities/sleep", () => {
     };
 });
 
-function formRendersFormViewCorrectly({getFormWithPropGetter}) {
+function formRendersFormViewCorrectly({getFormWithPropGetter, formView}) {
     describe("Form renders correctly", () => {
         test("Form renders formView correctly", () => {
-            const TestFormView = () => null;
-            const getFormView = () => <TestFormView/>;
+            const {doesElementExistAsChild} = getFormWithPropGetter();
 
-            const {doesElementExistAsChild} = getFormWithPropGetter({getFormView});
-
-            expect(doesElementExistAsChild(TestFormView)).toBe(true);
+            expect(doesElementExistAsChild(formView)).toBe(true);
         });
     });
 }
@@ -539,7 +536,7 @@ function formUnmountsCorrectly({getFormToUse, updateForm}) {
     });
 }
 
-export default ({getFormWithPropGetter, getForm}) => {
+export default ({getFormWithPropGetter, getForm, formView}) => {
     beforeEach(() => {
         const originalSleepModule = jest.requireActual("../../Utilities/sleep");
 
@@ -548,7 +545,7 @@ export default ({getFormWithPropGetter, getForm}) => {
         });
     });
 
-    formRendersFormViewCorrectly({getFormWithPropGetter});
+    formRendersFormViewCorrectly({getFormWithPropGetter, formView});
 
     function getTestFormViewByWatchedValuesObject(watchedValues) {
         return (props) => {

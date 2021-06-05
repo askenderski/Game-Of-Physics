@@ -3,7 +3,9 @@ import {mount} from "enzyme";
 import Form from "./Form";
 import {render} from "@testing-library/react";
 
-const renderFormWithPropGetter = props => mount(<Form {...props}/>);
+const TestFormView = () => null;
+
+const renderFormWithPropGetter = props => mount(<Form getFormView={()=><TestFormView/>} {...props}/>);
 const renderForm = props => render(<Form {...props}/>);
 const getElementByWrapperWithProps = (wrapper, element) => wrapper.find(element);
 
@@ -24,5 +26,5 @@ function getForm(props) {
 }
 
 describe("unit tests", () => {
-    executeTests({getFormWithPropGetter, getForm});
+    executeTests({getFormWithPropGetter, getForm, formView: TestFormView});
 });
