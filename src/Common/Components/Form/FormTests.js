@@ -12,15 +12,7 @@ jest.mock("../../Utilities/sleep", () => {
     };
 });
 
-export default ({getFormWithPropGetter, getForm}) => {
-    beforeEach(() => {
-        const originalSleepModule = jest.requireActual("../../Utilities/sleep");
-
-        sleepModule.default.mockImplementation(function (...args) {
-            return originalSleepModule.default(...args);
-        });
-    });
-
+function formRendersFormViewCorrectly({getFormWithPropGetter}) {
     describe("Form renders correctly", () => {
         test("Form renders formView correctly", () => {
             const TestFormView = () => null;
@@ -31,25 +23,9 @@ export default ({getFormWithPropGetter, getForm}) => {
             expect(doesElementExistAsChild(TestFormView)).toBe(true);
         });
     });
+}
 
-    function getTestFormViewByWatchedValuesObject(watchedValues) {
-        return (props) => {
-            watchedValues.props = props;
-
-            return null;
-        };
-    }
-
-    function getFormToUse(props) {
-        const watchedValues = {};
-
-        const TestFormView = getTestFormViewByWatchedValuesObject(watchedValues);
-        const getFormView = props => <TestFormView {...props}/>;
-
-        const form = getForm({getFormView, ...props});
-        return {watchedValues, form: {unmount: form.unmount.bind(form)}};
-    }
-
+function formDealsWithValuesCorrectly({getFormToUse}) {
     describe("Form has correct values and changes them correctly", () => {
         test("Form has no values by default", () => {
             const {watchedValues} = getFormToUse();
@@ -252,19 +228,13 @@ export default ({getFormWithPropGetter, getForm}) => {
             expect(watchedValues.props.touched[propToRemainUnchangedName]).not.toBeTruthy();
         });
     });
+}
 
-    async function updateForm() {
-        return act(async () => {});
-    }
-
-    afterEach(() => {
-        cleanup();
-    });
-
+function formErrorsWorkCorrectly({getFormToUse, updateForm}) {
     describe("Form errors work correctly", () => {
         //TODO: extract this into a file, since sleep.test.js also uses it
         async function advanceTimersAndWaitForPromisesToResolve(time) {
-            return act(async ()=>{
+            return act(async () => {
                 jest.advanceTimersByTime(time);
             });
         }
@@ -328,7 +298,10 @@ export default ({getFormWithPropGetter, getForm}) => {
             const propValidator = () => propErrors;
 
             const initialValues = {[propToChangeName]: propToChangeValue};
-            const {watchedValues} = getFormWithDefaultTime({initialValues, validators: {[propToChangeName]: propValidator}});
+            const {watchedValues} = getFormWithDefaultTime({
+                initialValues,
+                validators: {[propToChangeName]: propValidator}
+            });
 
             await act(async () => watchedValues.props.handleChangeByName(propToChangeName, newValue));
 
@@ -350,7 +323,10 @@ export default ({getFormWithPropGetter, getForm}) => {
 
             const initialValues = {[propToChangeName]: propToChangeOriginalValue};
 
-            const {watchedValues} = getFormWithDefaultTime({initialValues, validators: {[propToChangeName]: propValidator}});
+            const {watchedValues} = getFormWithDefaultTime({
+                initialValues,
+                validators: {[propToChangeName]: propValidator}
+            });
 
             await act(async () => watchedValues.props.handleChangeByName(propToChangeName, valueToChange1));
             await advanceTimersAndWaitForPromisesToResolve(notEnoughTimeForErrorsToRenderButMoreThanHalfOfEnoughTimeForErrorsToRender);
@@ -371,7 +347,10 @@ export default ({getFormWithPropGetter, getForm}) => {
 
             const initialValues = {[propToChangeName]: propToChangeOriginalValue};
 
-            const {watchedValues} = getFormWithDefaultTime({initialValues, validators: {[propToChangeName]: propValidator}});
+            const {watchedValues} = getFormWithDefaultTime({
+                initialValues,
+                validators: {[propToChangeName]: propValidator}
+            });
 
             await act(async () => watchedValues.props.handleChangeByName(propToChangeName, valueToChange1));
             await advanceTimersAndWaitForPromisesToResolve(notEnoughTimeForErrorsToBeRendered);
@@ -521,7 +500,9 @@ export default ({getFormWithPropGetter, getForm}) => {
             expect(watchedValues.props.errors).toEqual({[prop1Name]: prop1Errors, [prop2Name]: prop2Errors});
         });
     });
+}
 
+function formUnmountsCorrectly({getFormToUse, updateForm}) {
     describe("Form cleans up on unmounting", () => {
         test("Form cleans up validation promise on unmounting", async () => {
             const time = 1000;
@@ -539,7 +520,7 @@ export default ({getFormWithPropGetter, getForm}) => {
 
             let cancelledSleepPromises = 0;
 
-            sleepModule.default.mockImplementation(()=>{
+            sleepModule.default.mockImplementation(() => {
                 return new Promise((resolve, reject, onCancel) => {
                     onCancel(() => {
                         cancelledSleepPromises++;
@@ -556,4 +537,48 @@ export default ({getFormWithPropGetter, getForm}) => {
             expect(cancelledSleepPromises).toBe(sleepModule.default.mock.calls.length);
         });
     });
+}
+
+export default ({getFormWithPropGetter, getForm}) => {
+    beforeEach(() => {
+        const originalSleepModule = jest.requireActual("../../Utilities/sleep");
+
+        sleepModule.default.mockImplementation(function (...args) {
+            return originalSleepModule.default(...args);
+        });
+    });
+
+    formRendersFormViewCorrectly({getFormWithPropGetter});
+
+    function getTestFormViewByWatchedValuesObject(watchedValues) {
+        return (props) => {
+            watchedValues.props = props;
+
+            return null;
+        };
+    }
+
+    function getFormToUse(props) {
+        const watchedValues = {};
+
+        const TestFormView = getTestFormViewByWatchedValuesObject(watchedValues);
+        const getFormView = props => <TestFormView {...props}/>;
+
+        const form = getForm({getFormView, ...props});
+        return {watchedValues, form: {unmount: form.unmount.bind(form)}};
+    }
+
+    formDealsWithValuesCorrectly({getFormToUse});
+
+    async function updateForm() {
+        return act(async () => {});
+    }
+
+    afterEach(() => {
+        cleanup();
+    });
+
+    formErrorsWorkCorrectly({getFormToUse, updateForm});
+
+    formUnmountsCorrectly({getFormToUse, updateForm});
 };
