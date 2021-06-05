@@ -1,4 +1,4 @@
-export default function getInputPropsFromFormData(formData, name, inputType) {
+export default function getInputPropsFromFormData(formData, name) {
     const propsToReturn = {};
 
     propsToReturn.value = formData.values[name];

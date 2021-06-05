@@ -6,7 +6,53 @@ import FormContext from "../../FormContext";
 import executeGetFieldInputPropsFromFormDataTests from
         "./getFieldInputPropsFromFormData/getFieldInputPropsFromFormDataModuleTests";
 import executeWithInputTests from "../Input/withInputTests/InputModuleTests";
+import getFieldInputPropsFromFormData from "./getFieldInputPropsFromFormData/getFieldInputPropsFromFormData";
 import FieldInputComponent from "./FieldInputComponent/FieldInputComponent";
+import executeUnitTests from "./FieldInputTests";
+
+jest.mock("./getFieldInputPropsFromFormData/getFieldInputPropsFromFormData",
+    () => jest.fn().mockImplementation(function (...props) {
+        return jest.requireActual("./getFieldInputPropsFromFormData/getFieldInputPropsFromFormData")
+            .default.call(this, ...props);
+    })
+);
+
+beforeEach(()=> {
+    getFieldInputPropsFromFormData.mockImplementation(function (...props) {
+        return jest.requireActual("./getFieldInputPropsFromFormData/getFieldInputPropsFromFormData")
+            .default.call(this, ...props);
+    });
+});
+
+describe("unit tests", () => {
+    const renderFieldInputWithPropGetter = ({propsToPassManually, formProps}) =>
+        mount(<FormContext.Provider
+            value={{values: {}, ...formProps}}><FieldInput {...propsToPassManually}/></FormContext.Provider>)
+            .find(FieldInputComponent);
+
+    function getFieldInputWithPropGetter({propsToPassManually = {}, formProps = {}, propsToReturnFromContext}) {
+        const name = propsToPassManually.name || "someName";
+        const contextPropsIdentifier = formProps.contextPropsIdentifier || {};
+
+        getFieldInputPropsFromFormData.mockImplementation((contextPropsPassedToFieldInput, namePassedToFieldInput) => {
+            if (
+                contextPropsIdentifier === contextPropsPassedToFieldInput.contextPropsIdentifier
+                && name === namePassedToFieldInput
+            ) {
+                return propsToReturnFromContext;
+            }
+        });
+
+        const fieldInput = renderFieldInputWithPropGetter({
+            propsToPassManually: {name, ...propsToPassManually},
+            formProps: {contextPropsIdentifier, ...formProps}
+        });
+
+        return {executeOnChange: value => fieldInput.prop("onChange")({target: {value}})};
+    }
+
+    executeUnitTests({getFieldInputWithPropGetter});
+});
 
 const renderFieldInput = ({propsToPassManually, formProps}) => render(
     <FormContext.Provider value={{values: {}, ...formProps}}>
@@ -20,6 +66,20 @@ const renderFieldInputWithPropGetter = ({propsToPassManually, formProps}) => mou
 );
 
 describe("integration tests", () => {
+    describe("integration with all", () => {
+        executeUnitTests({
+            getFieldInputWithPropGetter({propsToPassManually = {}, propsToReturnFromContext}) {
+                const fieldInput = renderFieldInputWithPropGetter({
+                    propsToPassManually,
+                    formProps: {setFieldValue: (name, value) => propsToReturnFromContext.onChange(name, value)}
+                });
+                const onChange = fieldInput.find(FieldInputComponent).prop("onChange");
+
+                return {executeOnChange: value => onChange({target: {value}})};
+            }
+        });
+    });
+
     describe("integration with FieldInputComponent", () => {
         executeFieldInputComponentTests({
             getFieldInputWithPropGetter: props => {
