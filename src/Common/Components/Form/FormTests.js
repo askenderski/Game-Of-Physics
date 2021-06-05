@@ -574,10 +574,6 @@ export default ({getFormWithPropGetter, getForm}) => {
         return act(async () => {});
     }
 
-    afterEach(() => {
-        cleanup();
-    });
-
     formErrorsWorkCorrectly({getFormToUse, updateForm});
 
     formUnmountsCorrectly({getFormToUse, updateForm});
