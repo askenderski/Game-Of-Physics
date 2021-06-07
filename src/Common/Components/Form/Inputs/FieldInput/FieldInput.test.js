@@ -3,8 +3,8 @@ import {render} from "@testing-library/react";
 import FieldInput from "./FieldInput";
 import {mount} from "enzyme";
 import FormContext from "../../FormContext";
-import executeGetFieldInputPropsFromFormDataTests from
-        "./getFieldInputPropsFromFormData/getFieldInputPropsFromFormDataModuleTests";
+import executeGetFieldInputPropsFromFormDataTests
+    from "./getFieldInputPropsFromFormData/getFieldInputPropsFromFormDataModuleTests";
 import executeWithInputTests from "../Input/withInputTests/InputModuleTests";
 import getFieldInputPropsFromFormData from "./getFieldInputPropsFromFormData/getFieldInputPropsFromFormData";
 import FieldInputComponent from "./FieldInputComponent/FieldInputComponent";

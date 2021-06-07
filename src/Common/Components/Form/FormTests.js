@@ -1,4 +1,4 @@
-import {act, cleanup} from "@testing-library/react";
+import {act} from "@testing-library/react";
 import * as sleepModule from "../../Utilities/sleep";
 import Promise from "../../DataTypes/Promise";
 
