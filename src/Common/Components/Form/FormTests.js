@@ -12,7 +12,7 @@ jest.mock("../../Utilities/sleep", () => {
     };
 });
 
-function formRendersFormViewCorrectly({getFormWithPropGetter, formView}) {
+export function formRendersFormViewCorrectly({getFormWithPropGetter, formView}) {
     describe("Form renders correctly", () => {
         test("Form renders formView correctly", () => {
             const {doesElementExistAsChild} = getFormWithPropGetter();
@@ -22,23 +22,16 @@ function formRendersFormViewCorrectly({getFormWithPropGetter, formView}) {
     });
 }
 
+export function formHasCorrectInitialValues({getFormToUse, initialValuesToPass, expectedInitialValues}) {
+    test("Form passes initial values correctly", () => {
+        const {watchedValues} = getFormToUse({initialValues: initialValuesToPass});
+
+        expect(watchedValues.props.values).toEqual(expectedInitialValues);
+    });
+}
+
 function formDealsWithValuesCorrectly({getFormToUse}) {
     describe("Form has correct values and changes them correctly", () => {
-        test("Form has no values by default", () => {
-            const {watchedValues} = getFormToUse();
-
-            expect(watchedValues.props.values).toEqual({});
-        });
-
-        test("Form has initial values by default if such are passed", () => {
-            const initialValues = {a: 1, b: "b"};
-            const {watchedValues} = getFormToUse({initialValues});
-
-            Object.entries(initialValues).forEach(([propKey, propValue]) => {
-                expect(watchedValues.props.values[propKey]).toBe(propValue);
-            });
-        });
-
         test("Form sets one value correctly", async () => {
             const [valueName, value] = ["a", "a"];
             const {watchedValues} = getFormToUse();
@@ -536,7 +529,7 @@ function formUnmountsCorrectly({getFormToUse, updateForm}) {
     });
 }
 
-export default ({getFormWithPropGetter, getForm, formView}) => {
+export default ({getFormToUse}) => {
     beforeEach(() => {
         const originalSleepModule = jest.requireActual("../../Utilities/sleep");
 
@@ -544,26 +537,6 @@ export default ({getFormWithPropGetter, getForm, formView}) => {
             return originalSleepModule.default(...args);
         });
     });
-
-    formRendersFormViewCorrectly({getFormWithPropGetter, formView});
-
-    function getTestFormViewByWatchedValuesObject(watchedValues) {
-        return (props) => {
-            watchedValues.props = props;
-
-            return null;
-        };
-    }
-
-    function getFormToUse(props) {
-        const watchedValues = {};
-
-        const TestFormView = getTestFormViewByWatchedValuesObject(watchedValues);
-        const getFormView = props => <TestFormView {...props}/>;
-
-        const form = getForm({getFormView, ...props});
-        return {watchedValues, form: {unmount: form.unmount.bind(form)}};
-    }
 
     formDealsWithValuesCorrectly({getFormToUse});
 
