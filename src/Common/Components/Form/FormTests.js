@@ -12,6 +12,10 @@ jest.mock("../../Utilities/sleep", () => {
     };
 });
 
+async function updateForm() {
+    return act(async () => {});
+}
+
 export function formRendersFormViewCorrectly({getFormWithPropGetter, formView}) {
     describe("Form renders correctly", () => {
         test("Form renders formView correctly", () => {
@@ -220,7 +224,7 @@ function formDealsWithValuesCorrectly({getFormToUse}) {
     });
 }
 
-function formErrorsWorkCorrectly({getFormToUse, updateForm}) {
+function formErrorsWorkCorrectly({getFormToUse}) {
     describe("Form errors work correctly", () => {
         //TODO: extract this into a file, since sleep.test.js also uses it
         async function advanceTimersAndWaitForPromisesToResolve(time) {
@@ -492,7 +496,7 @@ function formErrorsWorkCorrectly({getFormToUse, updateForm}) {
     });
 }
 
-function formUnmountsCorrectly({getFormToUse, updateForm}) {
+function formUnmountsCorrectly({getFormToUse}) {
     describe("Form cleans up on unmounting", () => {
         test("Form cleans up validation promise on unmounting", async () => {
             const time = 1000;
@@ -540,11 +544,7 @@ export default ({getFormToUse}) => {
 
     formDealsWithValuesCorrectly({getFormToUse});
 
-    async function updateForm() {
-        return act(async () => {});
-    }
+    formErrorsWorkCorrectly({getFormToUse});
 
-    formErrorsWorkCorrectly({getFormToUse, updateForm});
-
-    formUnmountsCorrectly({getFormToUse, updateForm});
+    formUnmountsCorrectly({getFormToUse});
 };
